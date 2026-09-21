@@ -71,7 +71,8 @@ Las 4 primeras rutas comparten la barra de navegación inferior (Inicio/Tareas/A
 - **Adjuntos**: 1 archivo por tarea (imagen o PDF, máx. 10MB), comprimido en el navegador antes de subir. Guardado en el bucket de Storage `task-attachments`, con ruta `{course_id}/{task_id}/{archivo}` para que las políticas RLS reutilicen `is_delegate_for_course()`.
 - **Avisos (`/avisos`) es solo el opt-in**, no el envío real. Guarda qué cursos sigue cada dispositivo (tablas `push_subscriptions` / `push_subscription_courses`) y pide el permiso `Notification` del navegador. Falta la Fase 3 completa: claves VAPID + una Edge Function/cron que de verdad envíe el push un día antes de cada entrega a las 19:00.
 - **RLS es la única barrera de permisos real.** Antes de producción, probar explícitamente que un delegado de un curso no pueda editar tareas (ni subir/borrar adjuntos) de otro curso.
-- **Iconos PWA**: `public/icon-192.svg` y `public/icon-512.svg` son el favicon reescalado. Para soporte completo en iOS (que requiere un `apple-touch-icon` PNG), reemplázalos por PNGs reales antes de publicar.
+- **Iconos PWA**: PNGs en `public/` (`icon-192.png`, `icon-512.png`, `icon-maskable-512.png` con margen de seguridad para Android, y `apple-touch-icon.png` para iOS), generados desde `public/favicon.svg`. Si cambias el logo, regénéralos (p. ej. `npx sharp-cli -i favicon.svg -o icon-512.png resize 512 512`).
+- **Despliegue**: Vercel, conectado a este repo (cada push a `main` despliega solo). `vercel.json` reescribe todas las rutas a `index.html` para que las rutas del lado del cliente (`/panel`, `/tareas/:id`…) funcionen al entrar directo. Variables de entorno en Vercel: `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`.
 
 ## Comandos
 
